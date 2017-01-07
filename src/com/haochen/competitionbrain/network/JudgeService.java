@@ -1,5 +1,8 @@
 package com.haochen.competitionbrain.network;
 
+import com.haochen.competitionbrain.command.Command;
+import com.haochen.competitionbrain.command.Result;
+
 import java.io.IOException;
 
 /**
@@ -10,13 +13,15 @@ public abstract class JudgeService extends TerminalService {
     void start() throws IOException {
         io.write("judge accepted");
         io.flush();
-        while (true) {
-            int msg = getMessage();
-            switch (msg) {
-                case 1:
-                    return;
-                case 2:
-            }
-        }
+    }
+
+    @Override
+    Command getCommand() throws IOException {
+        return null;
+    }
+
+    @Override
+    public void handleResult(Result result) {
+
     }
 }
