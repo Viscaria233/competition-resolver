@@ -52,4 +52,10 @@ public class CommandHandler extends Thread {
             }
         }
     }
+
+    @Override
+    public void interrupt() {
+        queue.clear();
+        super.interrupt();
+    }
 }
