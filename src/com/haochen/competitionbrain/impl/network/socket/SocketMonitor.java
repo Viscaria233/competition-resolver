@@ -1,5 +1,6 @@
-package com.haochen.competitionbrain.network.socket;
+package com.haochen.competitionbrain.impl.network.socket;
 
+import com.haochen.competitionbrain.command.CommandHandler;
 import com.haochen.competitionbrain.network.NetworkMonitor;
 
 import java.io.*;
@@ -39,6 +40,8 @@ public class SocketMonitor extends NetworkMonitor {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            CommandHandler.getInstance().interrupt();
         }
     }
 }

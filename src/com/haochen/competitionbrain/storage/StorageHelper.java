@@ -7,7 +7,7 @@ import com.haochen.competitionbrain.bean.Match;
  * Created by Haochen on 2016/12/30.
  */
 public interface StorageHelper {
-    Bean get(int id);
+    Bean get(Class<? extends Bean> c, int id);
     void save(Bean bean);
     void remove(Bean bean);
     Bean[] search(SearchTerm term);

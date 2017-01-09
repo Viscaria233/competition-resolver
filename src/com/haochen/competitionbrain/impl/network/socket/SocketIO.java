@@ -1,4 +1,4 @@
-package com.haochen.competitionbrain.network.socket;
+package com.haochen.competitionbrain.impl.network.socket;
 
 import com.haochen.competitionbrain.bean.Bean;
 import com.haochen.competitionbrain.network.NetworkIO;
