@@ -10,18 +10,15 @@ import java.io.IOException;
  */
 public abstract class ManagerService extends TerminalService {
     @Override
-    void start() throws IOException {
-        io.write("manager accepted");
-        io.flush();
+    void prepare() throws IOException {
+        if (io != null) {
+            io.write("manager accepted");
+            io.flush();
+        }
     }
 
     @Override
-    Command getCommand() throws IOException {
-        return null;
-    }
-
-    @Override
-    public void handleResult(Result result) {
-
+    public String properties() {
+        return super.properties() + "[Type: Manager]";
     }
 }

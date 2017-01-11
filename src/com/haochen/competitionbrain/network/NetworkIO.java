@@ -1,5 +1,6 @@
 package com.haochen.competitionbrain.network;
 
+import com.haochen.competitionbrain.common.IProperties;
 import com.haochen.competitionbrain.bean.Bean;
 
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.io.IOException;
 /**
  * Created by Haochen on 2016/12/30.
  */
-public interface NetworkIO {
+public interface NetworkIO extends IProperties {
     void write(int n) throws IOException;
     void write(String str) throws IOException;
     void write(Bean bean) throws IOException;

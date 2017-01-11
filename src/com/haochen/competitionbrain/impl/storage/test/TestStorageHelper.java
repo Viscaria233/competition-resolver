@@ -12,8 +12,18 @@ import java.util.List;
  * Created by Haochen on 2017/1/9.
  */
 public class TestStorageHelper implements StorageHelper {
+    private static TestStorageHelper instance;
 
     private static final List<Bean> beans = new ArrayList<>();
+
+    private TestStorageHelper() {}
+
+    public static TestStorageHelper getInstance() {
+        if (instance == null) {
+            instance = new TestStorageHelper();
+        }
+        return instance;
+    }
 
     @Override
     public Bean get(Class<? extends Bean> c, int id) {

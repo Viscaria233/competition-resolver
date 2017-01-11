@@ -1,7 +1,11 @@
 package com.haochen.competitionbrain.impl.network.socket;
 
 import com.haochen.competitionbrain.bean.Bean;
+import com.haochen.competitionbrain.common.Config;
 import com.haochen.competitionbrain.network.NetworkIO;
+import com.haochen.xmlbuilder.XMLBuilder;
+import com.haochen.xmlbuilder.XMLReader;
+import com.haochen.xmlbuilder.exception.IllegalFileFormatException;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,14 +15,14 @@ import java.net.Socket;
  */
 public class SocketIO implements NetworkIO {
     private Socket socket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private InputStream in;
+    private OutputStream out;
 
     public SocketIO(Socket socket) {
         this.socket = socket;
         try {
-            this.in = new ObjectInputStream(socket.getInputStream());
-            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.out = socket.getOutputStream();
+            this.in = socket.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,27 +35,42 @@ public class SocketIO implements NetworkIO {
 
     @Override
     public void write(Bean bean) throws IOException {
-        out.writeObject(bean);
+        out.write(new XMLBuilder().build(bean).getBytes());
     }
 
     @Override
     public void write(String str) throws IOException {
-        out.writeUTF(str);
+        out.write(str.getBytes(Config.CHAR_SET));
     }
 
     @Override
     public int readInt() throws IOException {
-        return in.readInt();
+        return in.read();
     }
 
     @Override
     public Bean readBean() throws IOException, ClassNotFoundException {
-        return (Bean) in.readObject();
+        byte[] buf = new byte[1024];
+        StringBuilder builder = new StringBuilder();
+        while (in.read(buf) != -1) {
+            builder.append(new String(buf, Config.CHAR_SET));
+        }
+        try {
+            return (Bean) new XMLReader().read(builder.toString());
+        } catch (IllegalFileFormatException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public String readString() throws IOException {
-        return in.readUTF();
+        byte[] buf = new byte[1024];
+        StringBuilder builder = new StringBuilder();
+        while (in.read(buf) != -1) {
+            builder.append(new String(buf, Config.CHAR_SET));
+        }
+        return builder.toString();
     }
 
     @Override
@@ -64,5 +83,10 @@ public class SocketIO implements NetworkIO {
         in.close();
         out.close();
         socket.close();
+    }
+
+    @Override
+    public String properties() {
+        return socket.getRemoteSocketAddress().toString();
     }
 }
