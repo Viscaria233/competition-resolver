@@ -8,7 +8,8 @@ public abstract class Command {
     public static final int REMOVE = 2;
     public static final int EDIT = 3;
     public static final int SEARCH = 4;
-    public static final int CLOSE = 5;
+
+    public static final int TEST = 5;
 
     public static final int COMMIT_RESULT = 6;
 

@@ -8,7 +8,7 @@ import java.util.Queue;
  */
 public class CommandHandler extends Thread {
     private static CommandHandler instance;
-    private boolean enable;
+    private boolean enable = true;
     public static final Queue<Command> queue = new LinkedList<>();
 
     private CommandHandler() {}
@@ -47,14 +47,13 @@ public class CommandHandler extends Thread {
                         command.committer.handleResult(result);
                     }
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            } catch (InterruptedException ignored) {}
         }
     }
 
     @Override
     public void interrupt() {
+
         queue.clear();
         super.interrupt();
     }

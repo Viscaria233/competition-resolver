@@ -1,47 +1,117 @@
 package com.haochen.competitionbrain.impl.network.socket;
 
-import com.haochen.competitionbrain.command.CommandHandler;
+import com.haochen.competitionbrain.network.NetworkIO;
 import com.haochen.competitionbrain.network.NetworkMonitor;
+import com.haochen.competitionbrain.network.TerminalService;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Haochen on 2016/12/30.
  */
 public class SocketMonitor extends NetworkMonitor {
+    private static final int END_WAITING = 100;
+
     private ServerSocket server;
 
     @Override
-    public void start() {
+    protected void prepare() {
+        for (int tempPort = 2333; this.server == null ; ++tempPort) {
+            try {
+                this.server = new ServerSocket(tempPort);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //这里以某种方式显示localPort
+        int localPort = server.getLocalPort();
+        System.out.println("Local Port: " + localPort);
+    }
+
+    @Override
+    protected TerminalService waitForTerminal() {
         try {
-            this.server = new ServerSocket(2333);
-            int localPort = server.getLocalPort();
+            Socket socket = server.accept();
 
-            /**
-             * 这里以某种方式显示localPort
-             */
-            System.out.println(localPort);
+            NetworkIO io = new SocketIO(socket);
+            int type = io.readInt();
 
-            while (true) {
-                Socket socket = server.accept();
-                System.out.println("accept: " + socket.getRemoteSocketAddress());
+            if (type != END_WAITING) {
+                if (type == TEST) {
+                    io.write(TEST);
+                    io.flush();
+                    io.close();
+                } else {
+                    System.out.println("accept: " + socket.getRemoteSocketAddress());
+                    System.out.println("type: " + type);
 
-                Reader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                int type = in.read();
-                System.out.println("type: " + type);
-
-                if (type == MANAGER) {
-                    new SocketManager(socket).launch();
-                } else if (type == JUDGE) {
-                    new SocketJudge(socket).launch();
+                    if (type == MANAGER) {
+                        return new SocketManager(socket);
+                    } else if (type == JUDGE) {
+                        return new SocketJudge(socket);
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            CommandHandler.getInstance().interrupt();
+        }
+        return null;
+    }
+
+    @Override
+    protected void handle(TerminalService terminal) {
+        terminal.launch();
+    }
+
+    @Override
+    public void stop() {
+        try {
+            Socket socket = new Socket("localhost", server.getLocalPort());
+            enable = false;
+            OutputStream os = socket.getOutputStream();
+            os.write(END_WAITING);
+            os.flush();
+            socket.close();
+            server.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String properties() {
+        return super.properties() + "\nBy Socket\nLocal Port: " + server.getLocalPort();
+    }
+
+    @Override
+    public void newTerminal(int type) throws IOException {
+        if (type != END_WAITING) {
+            Socket socket = new Socket("localhost", server.getLocalPort());
+            NetworkIO io = new SocketIO(socket);
+            switch (type) {
+                case MANAGER:
+                    io.write(MANAGER);
+                    io.flush();
+                    break;
+                case JUDGE:
+                    io.write(JUDGE);
+                    io.flush();
+                    break;
+                case TEST:
+                    io.write(TEST);
+                    io.flush();
+                    int result = io.readInt();
+                    if (result == TEST) {
+                        System.out.println("Test success");
+                    }
+                    break;
+            }
+            io.close();
         }
     }
 }
