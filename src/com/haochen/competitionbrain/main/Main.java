@@ -1,5 +1,6 @@
 package com.haochen.competitionbrain.main;
 
+import com.haochen.competitionbrain.command.Command;
 import com.haochen.competitionbrain.command.CommandHandler;
 import com.haochen.competitionbrain.network.NetworkMonitor;
 import com.haochen.competitionbrain.impl.network.socket.SocketMonitor;
@@ -38,9 +39,21 @@ public class Main {
                     continue;
                 case "handler start":
                     handler.setEnable(true);
+                    System.out.println("CommandHandler is start");
                     continue;
                 case "handler stop":
                     handler.setEnable(false);
+                    System.out.println("CommandHandler is stop");
+                    continue;
+                case "queue":
+                    System.out.println("[Command Queue] size: " + CommandHandler.queue.size());
+                    for (Command c : CommandHandler.queue) {
+                        System.out.println(c.getClass().getSimpleName());
+                    }
+                    continue;
+                case "queue clear":
+                    CommandHandler.queue.clear();
+                    System.out.println("Command queue has cleaned");
                     continue;
                 case "monitor":
                     System.out.println(monitor.properties());
