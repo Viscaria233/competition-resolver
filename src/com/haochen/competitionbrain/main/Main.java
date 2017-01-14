@@ -20,12 +20,13 @@ public class Main {
         Thread monitorThread = new Thread(monitor::launch);
         monitorThread.start();
 
-        commandLine(monitor, handler);
+        commandLine(monitor);
     }
 
-    private static void commandLine(NetworkMonitor monitor, CommandHandler handler) {
+    private static void commandLine(NetworkMonitor monitor) {
         String ins;
         Scanner scanner = new Scanner(System.in);
+        CommandHandler handler = CommandHandler.getInstance();
         do {
             System.out.print(">>>>");
             ins = scanner.nextLine();
