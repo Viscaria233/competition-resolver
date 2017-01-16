@@ -6,29 +6,29 @@ import java.util.*;
  * Created by Haochen on 2016/12/29.
  */
 public class Game extends Bean {
-    protected List<Point> points = new ArrayList<>();
+    protected Point[] points = new Point[2];
     protected int maxPoint;
     protected int overtimePoint;
 
-    public List<Point> getPoints() {
+    public Point[] getPoints() {
         return points;
     }
 
     public void addPoint(Competitor competitor, int point) {
-        points.stream()
-                .filter((c) -> c.competitor == competitor)
-                .mapToInt((f) -> points.indexOf(f))
-                .findFirst()
-                .ifPresent(p -> addPoint(p, point));
+        if (competitor == points[0].competitor) {
+            addPoint(0, point);
+        } else if (competitor == points[1].competitor) {
+            addPoint(1, point);
+        }
     }
 
     public void addPoint(int index, int point) {
-        if (points.size() > index) {
-            int currentPoint = points.get(index).point;
+        if (index >= 0 && index < points.length) {
+            int currentPoint = points[index].point;
             if (currentPoint + point <= maxPoint) {
-                points.get(index).point += point;
+                points[index].point += point;
             } else {
-                points.get(index).point = maxPoint;
+                points[index].point = maxPoint;
             }
         }
     }
@@ -50,7 +50,7 @@ public class Game extends Bean {
     }
 
     public static class Point {
-        Competitor competitor;
-        int point;
+        public Competitor competitor;
+        public int point;
     }
 }
