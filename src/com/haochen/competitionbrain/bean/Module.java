@@ -8,4 +8,20 @@ import java.util.List;
 public class Module extends Bean {
     protected int rule;
     protected List<Group> groups;
+
+    public int getRule() {
+        return rule;
+    }
+
+    public void setRule(int rule) {
+        this.rule = rule;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
 }
