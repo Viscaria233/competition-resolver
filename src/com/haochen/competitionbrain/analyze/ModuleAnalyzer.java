@@ -7,8 +7,6 @@ import com.haochen.competitionbrain.bean.Module;
 import com.haochen.competitionbrain.rule.Rule;
 
 import java.util.*;
-import java.util.function.IntFunction;
-import java.util.stream.Stream;
 
 /**
  * Created by Haochen on 2017/1/17.
@@ -112,11 +110,11 @@ public class ModuleAnalyzer {
                 if (scores[j] < scores[j + 1]) {
                     int t = scores[j];
                     scores[j] = scores[j + i];
-                    scores[j + 1] = scores[j];
+                    scores[j + 1] = t;
 
                     t = indexes[j];
                     indexes[j] = indexes[j + i];
-                    indexes[j + 1] = indexes[j];
+                    indexes[j + 1] = t;
                 }
             }
         }

@@ -1,5 +1,6 @@
-package com.haochen.xmlbuilder;
+package com.haochen.competitionbrain.test;
 
+import com.haochen.competitionbrain.test.Inner;
 import com.haochen.xmlbuilder.annotation.XMLBean;
 import com.haochen.xmlbuilder.annotation.XMLNode;
 

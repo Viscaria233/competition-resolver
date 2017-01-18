@@ -28,7 +28,7 @@ public class SocketMonitor extends NetworkMonitor {
             }
         }
 
-        //这里以某种方式显示localPort
+        //杩欓噷鐢ㄦ煇绉嶆柟寮忔樉绀簂ocalPort
         int localPort = server.getLocalPort();
         System.out.println("Local Port: " + localPort);
     }
