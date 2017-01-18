@@ -1,4 +1,4 @@
-package com.haochen.xmlbuilder;
+package com.haochen.competitionbrain.test;
 
 import com.haochen.xmlbuilder.annotation.XMLNode;
 
@@ -16,7 +16,7 @@ public class Inner {
     private byte testByte = 'B';
     public boolean testBoolean = true;
     @XMLNode(name = "innerStr")
-    public String testString = "¹¶Àû¹ú¼ÒÉúËÀÒÔ";
+    public String testString = "è‹Ÿåˆ©å›½å®¶ç”Ÿæ­»ä»¥";
     @XMLNode(name = "inin")
     public Ininner ininner;
 }

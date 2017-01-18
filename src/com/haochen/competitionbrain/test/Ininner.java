@@ -1,4 +1,4 @@
-package com.haochen.xmlbuilder;
+package com.haochen.competitionbrain.test;
 
 import com.haochen.xmlbuilder.annotation.XMLNode;
 
