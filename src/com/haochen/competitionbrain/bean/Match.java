@@ -6,6 +6,8 @@ package com.haochen.competitionbrain.bean;
 public class Match extends Bean {
     protected Game[] games;
     protected Competitor[] competitors = new Competitor[2];
+    protected int winner;
+    protected int loser;
     protected int[] points = new int[2];
 
 
@@ -43,5 +45,21 @@ public class Match extends Bean {
 
     public void setPoints(int[] points) {
         this.points = points;
+    }
+
+    public Competitor getWinner() {
+        return competitors[winner];
+    }
+
+    public void setWinner(int winner) {
+        this.winner = winner;
+    }
+
+    public Competitor getLoser() {
+        return competitors[loser];
+    }
+
+    public void setLoser(int loser) {
+        this.loser = loser;
     }
 }
