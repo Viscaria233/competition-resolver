@@ -7,7 +7,5 @@ import java.util.List;
  */
 public class Competition extends Bean {
     protected String name;
-    protected int rule;
     protected List<Module> modules;
-    protected List<Competitor> competitors;
 }
