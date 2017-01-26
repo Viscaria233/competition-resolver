@@ -1,29 +1,27 @@
 package com.haochen.competitionbrain.test;
 
 import com.haochen.competitionbrain.test.Inner;
-import com.haochen.xmlbuilder.annotation.XMLBean;
-import com.haochen.xmlbuilder.annotation.XMLNode;
+import com.haochen.xmlbuilder.XmlNode;
 
 /**
  * Created by Haochen on 2017/1/2.
  */
-@XMLBean(name = "test")
 public class Test {
-    @XMLNode()
+    @XmlNode()
     private int testInt = 12;
-    @XMLNode(name = "double")
+    @XmlNode(name = "double")
     private double testDouble = 5.3;
     private float testFloat = 1.7f;
-    @XMLNode()
+    @XmlNode()
     private char testChar = 'H';
-    @XMLNode(name = "Byte")
+    @XmlNode(name = "Byte")
     private byte testByte = 'B';
-    @XMLNode(name = "bool")
+    @XmlNode(name = "bool")
     public boolean testBoolean = true;
-    @XMLNode(name = "hw")
+    @XmlNode(name = "hw")
     public String testString = "Hello World";
-    @XMLNode
+    @XmlNode
     public Inner inner;
-    @XMLNode
+    @XmlNode
     private Inner nullInner;
 }

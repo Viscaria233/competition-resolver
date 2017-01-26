@@ -1,18 +1,18 @@
 package com.haochen.competitionbrain.test;
 
-import com.haochen.xmlbuilder.annotation.XMLNode;
+import com.haochen.xmlbuilder.XmlNode;
 
 /**
  * Created by Haochen on 2017/1/2.
  */
 public class Ininner {
-    @XMLNode()
+    @XmlNode()
     private int testInt = 24;
-    @XMLNode(name = "double")
+    @XmlNode(name = "double")
     private double testDouble = 5.0003;
     private float testFloat = 122.7f;
-    @XMLNode()
+    @XmlNode()
     private char testChar = 'f';
-    @XMLNode(name = "intest")
+    @XmlNode(name = "intest")
     public Test intest;
 }
