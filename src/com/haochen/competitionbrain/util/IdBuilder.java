@@ -15,7 +15,7 @@ public class IdBuilder {
         String first = "" + className.charAt(0);
         String sub = className.substring(1);
         try {
-            Method method = IdBuilder.class.getDeclaredMethod(first.toUpperCase() + sub + "Id");
+            Method method = IdBuilder.class.getDeclaredMethod(first.toLowerCase() + sub + "Id");
             return (int) method.invoke(null);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
@@ -35,12 +35,8 @@ public class IdBuilder {
         return computeId(2 << 28, "team");
     }
 
-    public static int indvCompetitionId() {
-        return computeId(3 << 28, "indv_competition");
-    }
-
-    public static int teamCompetitionId() {
-        return computeId(4 << 28, "team_competition");
+    public static int competitionId() {
+        return computeId(3 << 28, "competition");
     }
 
     private static int computeId(int pre, String tableName) {

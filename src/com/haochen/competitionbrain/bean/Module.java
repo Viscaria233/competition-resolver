@@ -1,13 +1,16 @@
 package com.haochen.competitionbrain.bean;
 
+import com.haochen.competitionbrain.common.IFinish;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Haochen on 2016/12/29.
  */
-public class Module extends Bean {
+public class Module extends Bean implements IFinish {
     protected int rule;
-    protected List<Group> groups;
+    protected List<Group> groups = new ArrayList<>();
 
     public int getRule() {
         return rule;
@@ -23,5 +26,15 @@ public class Module extends Bean {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    @Override
+    public boolean isFinish() {
+        for (Group g : groups) {
+            if (!g.isFinish()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
