@@ -1,11 +1,14 @@
 package com.haochen.competitionbrain.bean;
 
+import com.haochen.competitionbrain.common.IFinish;
+import com.haochen.competitionbrain.common.IWinnerLoser;
+
 /**
  * Created by Haochen on 2016/12/29.
  */
-public class Game extends Bean {
+public class Game extends Bean implements IFinish, IWinnerLoser {
     protected Competitor[] competitors = new Competitor[2];
-    protected Competitor winner;
+    protected int winner = -1;
     protected int[] points = new int[2];
     protected int maxPoint;
     protected int overtimePoint;
@@ -18,11 +21,24 @@ public class Game extends Bean {
         this.competitors = competitors;
     }
 
+    @Override
     public Competitor getWinner() {
-        return winner;
+        if (winner == -1) {
+            return null;
+        }
+        return competitors[winner];
     }
 
-    public void setWinner(Competitor winner) {
+    @Override
+    public Competitor getLoser() {
+        if (winner == -1) {
+            return null;
+        }
+        return competitors[winner == 0 ? 1 : 0];
+    }
+
+    @Override
+    public void setWinner(int winner) {
         this.winner = winner;
     }
 
@@ -48,5 +64,10 @@ public class Game extends Bean {
 
     public void setOvertimePoint(int overtimePoint) {
         this.overtimePoint = overtimePoint;
+    }
+
+    @Override
+    public boolean isFinish() {
+        return winner != -1;
     }
 }
