@@ -10,6 +10,22 @@ import java.util.*;
 class SingleRoundRobinAnalyzer {
     private Columns columns = new Columns();
 
+    private final ScoreGetter SCORE = (r, i) -> r[0][i][columns.score];
+    private final ScoreGetter GAME_RATE = (r, i) -> 1.0 * r[0][i][columns.winGame] / (r[0][i][columns.loseGame + 1]);
+    private final ScoreGetter POINT_RATE = (r, i) -> 1.0 * r[0][i][columns.winPoint] / (r[0][i][columns.losePoint + 1]);
+    private ScoreGetter[] scoreGetters = {SCORE, GAME_RATE, POINT_RATE};
+
+    private Comparator comparator = (r, i1, i2) -> {
+        for (ScoreGetter getter : scoreGetters) {
+            double s1 = getter.getScore(r, i1);
+            double s2 = getter.getScore(r, i2);
+            if (s1 != s2) {
+                return s1 - s2;
+            }
+        }
+        return 0;
+    };
+
     private class Columns {
         int score;
         int winGame;
@@ -23,6 +39,15 @@ class SingleRoundRobinAnalyzer {
         int[][][] result;
         Competitor[] competitors;
         Map<Competitor, Integer> map;
+
+    }
+
+    private interface ScoreGetter {
+        double getScore(int[][][] result, int index);
+    }
+
+    private interface Comparator {
+        double compare(int[][][] result, int index1, int index2);
     }
 
     Report report(Module module) {
@@ -46,7 +71,7 @@ class SingleRoundRobinAnalyzer {
 
             //score and win/lose Game
             if (points[0] == -1 || points[1] == -1) {
-                winMatchByQuit(m.getWinner(), report.result, report.map);
+                winMatchByQuitingFoe(m.getWinner(), report.result, report.map);
             } else {
                 winMatch(m.getWinner(), m.getLoser(), report.result, report.map);
             }
@@ -94,63 +119,45 @@ class SingleRoundRobinAnalyzer {
         int[][][] result = report.result;
         Competitor[] competitors = report.competitors;
         //rank
-        int[] indexes = new int[competitors.length];
-        int[] scores = new int[competitors.length];
-        for (int i = 0; i < indexes.length; ++i) {
-            indexes[i] = i;
-            scores[i] = result[0][i][columns.score];
-        }
-        //sort desc
-        for (int i = 0; i < indexes.length - 1; ++i) {
-            for (int j = 0; j < indexes.length - i; ++j) {
-                if (scores[j] < scores[j + 1]) {
-                    swap(scores, j, j + 1);
-                    swap(indexes, j, j + 1);
+        //sort desc by comparator.compare()
+        int[] ranks = new int[competitors.length];
+        int lastIndex = 0;
+        for (int i = 0; i < competitors.length - 1; ++i) {
+            int max = 0;
+            for (int j = i + 1; j < competitors.length - 1; ++j) {
+                max = i;
+                if (comparator.compare(result, max, j) > 0) {
+                    max = j;
                 }
             }
+            if (i > 0 && comparator.compare(result, max, lastIndex) == 0) {
+                if (ranks[lastIndex] > 0) {
+                    ranks[lastIndex] *= -1;
+                }
+                ranks[max] = ranks[lastIndex];
+            } else {
+                ranks[max] = i + 1;
+            }
+            lastIndex = max;
         }
         //rank calculating
-        result[0][indexes[0]][columns.rank] = 1;
-        int rank = 1;
-        int sameRankCount = 1;
-        for (int i = 1; i < indexes.length; ++i) {
-            if (scores[i] == scores[i - 1]) {
-                result[0][indexes[i]][columns.rank] = -rank;
-                result[0][indexes[i - 1]][columns.rank] *= -1;
-                sameRankCount++;
-            } else {
-                rank += sameRankCount;
-                sameRankCount = 0;
-                result[0][indexes[i]][columns.rank] = rank;
-            }
+        for (int i = 0; i < ranks.length; ++i) {
+            result[0][i][columns.rank] = ranks[i];
         }
 
-        if (noResult(report.result, report.competitors)) {
-            return false;
-        }
-        return true;
+        return hasResult(report.result, report.competitors);
     }
 
-    private boolean noResult(int[][][] result, Competitor[] competitors) {
-        int rank = result[0][0][columns.rank];
-        if (rank > 0) {
-            return false;
-        }
+    private boolean hasResult(int[][][] result, Competitor[] competitors) {
         for (int i = 0; i < competitors.length; ++i) {
-            if (result[0][i][columns.rank] != rank) {
+            if (result[0][i][columns.rank] <= 0) {
                 return false;
             }
         }
         return true;
     }
 
-    private void swap(int[] array, int id1, int id2) {
-        int t = array[id1];
-        array[id1] = array[id2];
-        array[id2] = t;
-    }
-
-    private void winMatchByQuit(Competitor winner, int[][][] result, Map<Competitor, Integer> map) {
+    private void winMatchByQuitingFoe(Competitor winner, int[][][] result, Map<Competitor, Integer> map) {
         result[0][map.get(winner)][columns.score] += 2;
     }
 
