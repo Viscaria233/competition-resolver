@@ -13,6 +13,13 @@ public class Game extends Bean implements IFinish, IWinnerLoser {
     protected int maxPoint;
     protected int overtimePoint;
 
+    public Game() {}
+
+    public Game(int maxPoint, int overtimePoint) {
+        this.maxPoint = maxPoint;
+        this.overtimePoint = overtimePoint;
+    }
+
     public Competitor[] getCompetitors() {
         return competitors;
     }

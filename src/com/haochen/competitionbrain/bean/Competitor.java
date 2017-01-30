@@ -6,6 +6,17 @@ package com.haochen.competitionbrain.bean;
 public abstract class Competitor extends Bean {
     protected String name;
 
+    public Competitor() {}
+
+    public Competitor(int id) {
+        super(id);
+    }
+
+    public Competitor(int id, String name) {
+        super(id);
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

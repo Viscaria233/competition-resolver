@@ -8,6 +8,12 @@ import java.io.Serializable;
 public abstract class Bean implements Serializable {
     protected int id;
 
+    public Bean() {}
+
+    public Bean(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

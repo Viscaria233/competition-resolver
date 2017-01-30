@@ -3,9 +3,9 @@ package com.haochen.competitionbrain.impl.network.socket;
 import com.haochen.competitionbrain.bean.Bean;
 import com.haochen.competitionbrain.common.Config;
 import com.haochen.competitionbrain.network.NetworkIO;
-import com.haochen.xmlbuilder.XMLBuilder;
-import com.haochen.xmlbuilder.XMLReader;
-import com.haochen.xmlbuilder.exception.IllegalFileFormatException;
+import com.haochen.xmlbuilder.XmlReader;
+import com.haochen.xmlbuilder.XmlWriter;
+import com.haochen.xmlbuilder.util.XmlUtil;
 
 import java.io.*;
 import java.net.Socket;
@@ -35,7 +35,7 @@ public class SocketIO implements NetworkIO {
 
     @Override
     public void write(Bean bean) throws IOException {
-        out.write(new XMLBuilder().build(bean).getBytes());
+        out.write(XmlUtil.xmlString(bean).getBytes());
     }
 
     @Override
@@ -55,12 +55,7 @@ public class SocketIO implements NetworkIO {
         while (in.read(buf) != -1) {
             builder.append(new String(buf, Config.CHAR_SET));
         }
-        try {
-            return (Bean) new XMLReader().read(builder.toString());
-        } catch (IllegalFileFormatException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return (Bean) XmlUtil.xmlObject(builder.toString());
     }
 
     @Override
