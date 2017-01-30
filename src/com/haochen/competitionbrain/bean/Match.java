@@ -3,25 +3,34 @@ package com.haochen.competitionbrain.bean;
 import com.haochen.competitionbrain.common.IFinish;
 import com.haochen.competitionbrain.common.IWinnerLoser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Haochen on 2016/12/29.
  */
 public class Match extends Bean implements IFinish, IWinnerLoser {
-    protected Game[] games;
+    protected List<Game> games = new ArrayList<>();
     protected Competitor[] competitors = new Competitor[2];
+    protected int maxGame;
     protected int winner = -1;
     protected int[] points = new int[2];
 
+    public Match() {}
 
     /**
      *
-     * @param maxGames maxGames = 3 means Best of 5
+     * @param maxGame maxGames = 3 means Best of 5
      */
-    public Match(int maxGames) {
-        games = new Game[maxGames * 2 - 1];
+    public Match(int maxGame) {
+        this.maxGame = maxGame;
     }
 
-    public Game[] getGames() {
+    public int finishedGameCount() {
+        return points[0] + points[1];
+    }
+
+    public List<Game> getGames() {
         return games;
     }
 
@@ -30,10 +39,10 @@ public class Match extends Bean implements IFinish, IWinnerLoser {
     }
 
     public int getMaxGame() {
-        return games.length / 2 + 1;
+        return maxGame;
     }
 
-    public void setGames(Game[] games) {
+    public void setGames(List<Game> games) {
         this.games = games;
     }
 

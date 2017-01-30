@@ -7,6 +7,17 @@ public class Athlete extends Competitor {
     public static final int MALE = 1;
     public static final int FEMALE = 2;
 
+    public Athlete() {}
+
+    public Athlete(int id) {
+        super(id);
+    }
+
+    public Athlete(int id, String name) {
+        super(id);
+        this.name = name;
+    }
+
     private int age;
     private int sex;
     private int score;

@@ -48,16 +48,6 @@ public class TestStorageHelper implements StorageHelper {
     }
 
     @Override
-    public IndvCompetition getIndvCompetition(int id) {
-        return null;
-    }
-
-    @Override
-    public TeamCompetition getTeamCompetition(int id) {
-        return null;
-    }
-
-    @Override
     public void save(Bean bean) {
         beans.add(bean);
     }
@@ -78,16 +68,6 @@ public class TestStorageHelper implements StorageHelper {
     }
 
     @Override
-    public void saveIndvCompetition(IndvCompetition competition) {
-
-    }
-
-    @Override
-    public void saveTeamCompetition(TeamCompetition competition) {
-
-    }
-
-    @Override
     public void remove(Bean bean) {
         beans.remove(bean);
     }
@@ -104,16 +84,6 @@ public class TestStorageHelper implements StorageHelper {
 
     @Override
     public void removeCompetition(Competition competition) {
-
-    }
-
-    @Override
-    public void removeIndvCompetition(IndvCompetition competition) {
-
-    }
-
-    @Override
-    public void removeTeamCompetition(TeamCompetition competition) {
 
     }
 

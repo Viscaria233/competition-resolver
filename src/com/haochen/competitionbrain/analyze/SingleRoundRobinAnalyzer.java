@@ -3,16 +3,19 @@ package com.haochen.competitionbrain.analyze;
 import com.haochen.competitionbrain.bean.*;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by Haochen on 2017/1/19.
  */
-class SingleRoundRobinAnalyzer {
+public class SingleRoundRobinAnalyzer {
     private Columns columns = new Columns();
 
     private final ScoreGetter SCORE = (r, i) -> r[0][i][columns.score];
-    private final ScoreGetter GAME_RATE = (r, i) -> 1.0 * r[0][i][columns.winGame] / (r[0][i][columns.loseGame + 1]);
-    private final ScoreGetter POINT_RATE = (r, i) -> 1.0 * r[0][i][columns.winPoint] / (r[0][i][columns.losePoint + 1]);
+    private final ScoreGetter GAME_RATE = (r, i) -> r[0][i][columns.loseGame] == 0 ? Integer.MAX_VALUE
+            : 1.0 * r[0][i][columns.winGame] / (r[0][i][columns.loseGame]);
+    private final ScoreGetter POINT_RATE = (r, i) -> r[0][i][columns.losePoint] == 0 ? Integer.MAX_VALUE
+            : 1.0 * r[0][i][columns.winPoint] / (r[0][i][columns.losePoint]);
     private ScoreGetter[] scoreGetters = {SCORE, GAME_RATE, POINT_RATE};
 
     private Comparator comparator = (r, i1, i2) -> {
@@ -59,23 +62,21 @@ class SingleRoundRobinAnalyzer {
                 temp.addAll(Arrays.asList(m.getCompetitors()));
             }
         }
-        Competitor[] competitors = temp.stream().distinct().toArray(v -> new Competitor[1]);
+        Competitor[] competitors = temp.stream().distinct().toArray(Competitor[]::new);
         Report report = createReport(competitors);
 
         matches.forEach((m) -> {
-            //put points
             Competitor[] cs = m.getCompetitors();
             int[] points = m.getPoints();
-            winGame(cs[0], cs[1], points[0], report.result, report.map);
-            winGame(cs[1], cs[0], points[1], report.result, report.map);
-
-            //score and win/lose Game
+            //match score
             if (points[0] == -1 || points[1] == -1) {
                 winMatchByQuitingFoe(m.getWinner(), report.result, report.map);
             } else {
                 winMatch(m.getWinner(), m.getLoser(), report.result, report.map);
             }
-
+            //win/lose Game
+            winGame(cs[0], cs[1], points[0], report.result, report.map);
+            winGame(cs[1], cs[0], points[1], report.result, report.map);
             //win/lose Point
             for (Game g : m.getGames()) {
                 Competitor[] gameCs = g.getCompetitors();
@@ -121,24 +122,34 @@ class SingleRoundRobinAnalyzer {
         //rank
         //sort desc by comparator.compare()
         int[] ranks = new int[competitors.length];
-        int lastIndex = 0;
-        for (int i = 0; i < competitors.length - 1; ++i) {
-            int max = 0;
-            for (int j = i + 1; j < competitors.length - 1; ++j) {
-                max = i;
-                if (comparator.compare(result, max, j) > 0) {
+        int[] indexes = new int[competitors.length];
+        for (int i = 0; i < indexes.length; ++i) {
+            indexes[i] = i;
+        }
+//        int lastIndex = 0;
+        for (int i = 0; i < competitors.length; ++i) {
+            int max = i;
+            for (int j = i + 1; j < competitors.length; ++j) {
+                if (comparator.compare(result, indexes[j], indexes[max]) > 0) {
                     max = j;
                 }
             }
-            if (i > 0 && comparator.compare(result, max, lastIndex) == 0) {
-                if (ranks[lastIndex] > 0) {
-                    ranks[lastIndex] *= -1;
+
+            if (i > 0 && comparator.compare(result, indexes[max], indexes[i - 1]) == 0) {
+                if (ranks[indexes[i - 1]] > 0) {
+                    ranks[indexes[i - 1]] *= -1;
                 }
-                ranks[max] = ranks[lastIndex];
+                ranks[indexes[max]] = ranks[indexes[i - 1]];
             } else {
-                ranks[max] = i + 1;
+                ranks[indexes[max]] = i + 1;
             }
-            lastIndex = max;
+
+            if (max != i) {
+                int t = indexes[max];
+                indexes[max] = indexes[i];
+                indexes[i] = t;
+            }
+//            lastIndex = i - 1;
         }
         //rank calculating
         for (int i = 0; i < ranks.length; ++i) {
@@ -171,8 +182,8 @@ class SingleRoundRobinAnalyzer {
         int foeIndex = map.get(foe);
         result[0][selfIndex][foeIndex] += winCount;
         result[1][foeIndex][selfIndex] += winCount;
-        result[0][selfIndex][columns.winGame]++;
-        result[1][foeIndex][columns.loseGame]++;
+        result[0][selfIndex][columns.winGame] += winCount;
+        result[0][foeIndex][columns.loseGame] += winCount;
     }
 
     private void winPoint(Competitor self, Competitor foe, int winCount, int[][][] result, Map<Competitor, Integer> map) {
