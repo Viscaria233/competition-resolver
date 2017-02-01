@@ -3,23 +3,24 @@ package com.haochen.competitionbrain.analyze;
 import com.haochen.competitionbrain.bean.*;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * Created by Haochen on 2017/1/19.
  */
 public class SingleRoundRobinAnalyzer {
-    private Columns columns = new Columns();
+    Columns columns = new Columns();
 
-    private final ScoreGetter SCORE = (r, i) -> r[0][i][columns.score];
-    private final ScoreGetter GAME_RATE = (r, i) -> r[0][i][columns.loseGame] == 0 ? Integer.MAX_VALUE
-            : 1.0 * r[0][i][columns.winGame] / (r[0][i][columns.loseGame]);
-    private final ScoreGetter POINT_RATE = (r, i) -> r[0][i][columns.losePoint] == 0 ? Integer.MAX_VALUE
-            : 1.0 * r[0][i][columns.winPoint] / (r[0][i][columns.losePoint]);
-    private ScoreGetter[] scoreGetters = {SCORE, GAME_RATE, POINT_RATE};
+    private ScoreGetter[] getScoreGetter() {
+        final ScoreGetter SCORE = (r, i) -> r[0][i][columns.score];
+        final ScoreGetter GAME_RATE = (r, i) -> r[0][i][columns.loseGame] == 0 ? Integer.MAX_VALUE
+                : 1.0 * r[0][i][columns.winGame] / (r[0][i][columns.loseGame]);
+        final ScoreGetter POINT_RATE = (r, i) -> r[0][i][columns.losePoint] == 0 ? Integer.MAX_VALUE
+                : 1.0 * r[0][i][columns.winPoint] / (r[0][i][columns.losePoint]);
+        return new ScoreGetter[]{SCORE, GAME_RATE, POINT_RATE};
+    }
 
     private Comparator comparator = (r, i1, i2) -> {
-        for (ScoreGetter getter : scoreGetters) {
+        for (ScoreGetter getter : getScoreGetter()) {
             double s1 = getter.getScore(r, i1);
             double s2 = getter.getScore(r, i2);
             if (s1 != s2) {
@@ -29,7 +30,7 @@ public class SingleRoundRobinAnalyzer {
         return 0;
     };
 
-    private class Columns {
+    class Columns {
         int score;
         int winGame;
         int loseGame;
@@ -38,66 +39,78 @@ public class SingleRoundRobinAnalyzer {
         int rank;
     }
 
-    private class Report {
+    class Report {
         int[][][] result;
         Competitor[] competitors;
         Map<Competitor, Integer> map;
 
     }
 
-    private interface ScoreGetter {
+    interface ScoreGetter {
         double getScore(int[][][] result, int index);
     }
 
-    private interface Comparator {
+    interface Comparator {
         double compare(int[][][] result, int index1, int index2);
     }
 
-    Report report(Module module) {
+    private Report report(Module module) {
         List<Match> matches = new ArrayList<>();
-        List<Competitor> temp = new ArrayList<>();
+        List<Competitor> competitors = new ArrayList<>();
         for (Group g : module.getGroups()) {
             matches.addAll(g.getMatches());
             for (Match m : g.getMatches()) {
-                temp.addAll(Arrays.asList(m.getCompetitors()));
+                competitors.addAll(Arrays.asList(m.getCompetitors()));
             }
         }
-        Competitor[] competitors = temp.stream().distinct().toArray(Competitor[]::new);
-        Report report = createReport(competitors);
+        Competitor[] distinctCompetitors = competitors.stream().distinct().toArray(Competitor[]::new);
+        Report report = createReport(distinctCompetitors);
 
         matches.forEach((m) -> {
-            Competitor[] cs = m.getCompetitors();
             int[] points = m.getPoints();
-            //match score
-            if (points[0] == -1 || points[1] == -1) {
-                winMatchByQuitingFoe(m.getWinner(), report.result, report.map);
-            } else {
-                winMatch(m.getWinner(), m.getLoser(), report.result, report.map);
-            }
-            //win/lose Game
-            winGame(cs[0], cs[1], points[0], report.result, report.map);
-            winGame(cs[1], cs[0], points[1], report.result, report.map);
-            //win/lose Point
-            for (Game g : m.getGames()) {
-                Competitor[] gameCs = g.getCompetitors();
-                int[] gamePoints = g.getPoints();
-                winPoint(gameCs[0], gameCs[1], gamePoints[0], report.result, report.map);
-                winPoint(gameCs[1], gameCs[0], gamePoints[1], report.result, report.map);
-            }
+            matchScore(report, m, points);
+            winLoseGame(report, m, points);
+            winLosePoint(report, m);
         });
         return report;
     }
 
+    private void winLosePoint(Report report, Match m) {
+        for (Game g : m.getGames()) {
+            Competitor[] cs = g.getCompetitors();
+            int[] points = g.getPoints();
+            winPoint(cs[0], cs[1], points[0], report.result, report.map);
+            winPoint(cs[1], cs[0], points[1], report.result, report.map);
+        }
+    }
+
+    void winLoseGame(Report report, Match m, int[] points) {
+        Competitor[] cs = m.getCompetitors();
+        winGame(cs[0], cs[1], points[0], report.result, report.map);
+        winGame(cs[1], cs[0], points[1], report.result, report.map);
+    }
+
+    private void matchScore(Report report, Match m, int[] points) {
+        if (points[0] == -1 || points[1] == -1) {
+            winMatchByQuitingFoe(m.getWinner(), report.result, report.map);
+        } else {
+            winMatch(m.getWinner(), m.getLoser(), report.result, report.map);
+        }
+    }
+
     int[][][] analyze(Module module) {
+        if (!module.isFinish()) {
+            return null;
+        }
         Report report = report(module);
-        boolean done = rank(report);
-        return done ? report.result : null;
+        rank(report);
+        return report.result;
     }
 
     private Report createReport(Competitor[] competitors) {
-        int row = competitors.length;
-        int col = competitors.length + 6;
-        int[][][] result = new int[2][row][col];
+        int row = getResultRow(competitors);
+        int col = getResultColumn(competitors);
+        int[][][] result = getResultArray(row, col);
         columns.score = col - 6;
         columns.winGame = col - 5;
         columns.loseGame = col - 4;
@@ -114,6 +127,18 @@ public class SingleRoundRobinAnalyzer {
         report.competitors = competitors;
         report.map = map;
         return report;
+    }
+
+    private int getResultRow(Competitor[] competitors) {
+        return competitors.length;
+    }
+
+    private int getResultColumn(Competitor[] competitors) {
+        return competitors.length + 6;
+    }
+
+    protected int[][][] getResultArray(int row, int col) {
+        return new int[2][row][col];
     }
 
     private boolean rank(Report report) {

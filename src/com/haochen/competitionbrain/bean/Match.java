@@ -13,6 +13,7 @@ public class Match extends Bean implements IFinish, IWinnerLoser {
     protected List<Game> games = new ArrayList<>();
     protected Competitor[] competitors = new Competitor[2];
     protected int maxGame;
+    protected int homeCompetitor = -1;
     protected int winner = -1;
     protected int[] points = new int[2];
 
@@ -58,6 +59,18 @@ public class Match extends Bean implements IFinish, IWinnerLoser {
         this.points = points;
     }
 
+    public void setMaxGame(int maxGame) {
+        this.maxGame = maxGame;
+    }
+
+    public int getHomeCompetitor() {
+        return homeCompetitor;
+    }
+
+    public void setHomeCompetitor(int homeCompetitor) {
+        this.homeCompetitor = homeCompetitor;
+    }
+
     @Override
     public boolean isFinish() {
         for (Game g : games) {
@@ -65,7 +78,7 @@ public class Match extends Bean implements IFinish, IWinnerLoser {
                 return false;
             }
         }
-        return true;
+        return winner != -1;
     }
 
     @Override
