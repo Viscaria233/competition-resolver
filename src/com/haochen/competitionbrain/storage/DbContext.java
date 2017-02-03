@@ -20,7 +20,23 @@ public abstract class DbContext {
         }
     }
 
+    private void init() {
+        dbUrl = getDbUrl();
+        try {
+            if (connection == null) {
+                connection = DriverManager.getConnection(dbUrl);
+            }
+            if (statement == null) {
+                statement = connection.createStatement();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
+    }
+
     protected abstract void onCreate() throws SQLException;
+    protected abstract String getDbUrl();
 
     public void setQueryTimeout(int second) {
         try {
@@ -150,21 +166,4 @@ public abstract class DbContext {
         }
         return sql;
     }
-
-    private void init() {
-        dbUrl = getDbUrl();
-        try {
-            if (connection == null) {
-                connection = DriverManager.getConnection(dbUrl);
-            }
-            if (statement == null) {
-                statement = connection.createStatement();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println(e.getMessage());
-        }
-    }
-
-    protected abstract String getDbUrl();
 }

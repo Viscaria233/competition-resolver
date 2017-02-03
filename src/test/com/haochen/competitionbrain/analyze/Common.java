@@ -6,13 +6,14 @@ import com.haochen.competitionbrain.bean.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by Haochen on 2017/2/2.
  */
 public class Common {
-    static List<Module> createRoundRobinModuleList(Competitor[] competitors, int[][] matchResults, int[][][] gameResults) {
+    static List<Module> createRoundRobinModuleList(Competitor[][] competitors, int[][] matchResults, int[][][] gameResults) {
         List<Module> modules = new ArrayList<>();
 
         for (int i = 0; i < matchResults.length; ++i) {
@@ -21,17 +22,17 @@ public class Common {
             int[] matchResult = matchResults[i];
             Group group = new Group();
             for (int j = 0; matchIndex < matchResult.length; ++j) {
-                for (int k = 0; k < competitors.length; ++k) {
-                    int row = j % competitors.length;
-                    int col = k % competitors.length;
+                for (int k = 0; k < competitors[i].length; ++k) {
+                    int row = j % competitors[i].length;
+                    int col = k % competitors[i].length;
                     if (row < col) {
-                        Match match = createMatch(competitors, matchResult, matchIndex, row, col);
+                        Match match = createMatch(competitors[i], matchResult, matchIndex, row, col);
                         match.setHomeCompetitor(matchIndex >= matchResult.length ? 1 : 0);
 
                         int index = 0;
                         int[][] gameResult = gameResults[i];
                         for (int k1 = 0; k1 < match.finishedGameCount(); ++k1) {
-                            Game game = createGame(competitors, gameResult[gameIndex], index, row, col);
+                            Game game = createGame(competitors[i], gameResult[gameIndex], index, row, col);
                             match.getGames().add(game);
                             index += 2;
                         }
@@ -43,7 +44,9 @@ public class Common {
                     }
                 }
             }
+            group.getCompetitors().addAll(Arrays.asList(competitors[i]));
             Module module = new Module();
+            module.getCompetitors().addAll(Arrays.asList(competitors[i]));
             module.getGroups().add(group);
             modules.add(module);
         }
@@ -83,7 +86,7 @@ public class Common {
         return null;
     }
 
-    static int[][] invokeWithAllModules(String className, List<Module> modules, Competitor[] competitors, int invokeCount) {
+    static int[][] invokeWithAllModules(String className, List<Module> modules, Competitor[][] competitors, int invokeCount) {
         try {
             Class clazz = Class.forName(className);
             Method method= findMethod(clazz, "analyze", Module.class);
@@ -94,7 +97,7 @@ public class Common {
             int[][] ranks = new int[invokeCount][];
             for (int i = 0; i < invokeCount; ++i) {
                 int[][][] invokeResult = (int[][][]) method.invoke(Class.forName(className).newInstance(), modules.get(i));
-                int[] rank = new int[competitors.length];
+                int[] rank = new int[competitors[i].length];
                 for (int j = 0; j < rank.length; ++j) {
                     int[] array = invokeResult[0][j];
                     rank[j] = array[array.length - 1];

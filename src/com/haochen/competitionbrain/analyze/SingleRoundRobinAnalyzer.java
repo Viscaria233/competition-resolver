@@ -56,15 +56,16 @@ public class SingleRoundRobinAnalyzer {
 
     private Report report(Module module) {
         List<Match> matches = new ArrayList<>();
-        List<Competitor> competitors = new ArrayList<>();
+//        List<Competitor> competitors = new ArrayList<>();
         for (Group g : module.getGroups()) {
             matches.addAll(g.getMatches());
-            for (Match m : g.getMatches()) {
-                competitors.addAll(Arrays.asList(m.getCompetitors()));
-            }
+//            for (Match m : g.getMatches()) {
+//                competitors.addAll(Arrays.asList(m.getCompetitors()));
+//            }
         }
-        Competitor[] distinctCompetitors = competitors.stream().distinct().toArray(Competitor[]::new);
-        Report report = createReport(distinctCompetitors);
+//        Competitor[] distinctCompetitors = competitors.stream().distinct().toArray(Competitor[]::new);
+        List<Competitor> competitors = module.getCompetitors();
+        Report report = createReport(competitors.toArray(new Competitor[competitors.size()]));
 
         matches.forEach((m) -> {
             int[] points = m.getPoints();

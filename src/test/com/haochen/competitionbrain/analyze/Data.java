@@ -9,13 +9,19 @@ import com.haochen.competitionbrain.bean.Competitor;
 class Data {
     static class RoundRobin {
         static class Single {
-            static Competitor[] competitors = {
+            static Competitor[][] competitors = {{
                     new Athlete(0),
                     new Athlete(1),
                     new Athlete(2),
                     new Athlete(3),
                     new Athlete(4),
-            };
+            }, {
+                    new Athlete(0),
+                    new Athlete(1),
+                    new Athlete(2),
+                    new Athlete(3),
+                    new Athlete(4),
+            }};
 
             static int[][] matchResults = {{
                     0, 3, 2, 3, 1, 3, 1, 3,
@@ -52,13 +58,19 @@ class Data {
         }
 
         static class Double {
-            static Competitor[] competitors = {
+            static Competitor[][] competitors = {{
                     new Athlete(0),
                     new Athlete(1),
                     new Athlete(2),
                     new Athlete(3),
                     new Athlete(4),
-            };
+            }, {
+                    new Athlete(0),
+                    new Athlete(1),
+                    new Athlete(2),
+                    new Athlete(3),
+                    new Athlete(4),
+            }};
 
             static int[][] matchResults = {{
                     0, 3, 2, 3, 1, 3, 1, 3,

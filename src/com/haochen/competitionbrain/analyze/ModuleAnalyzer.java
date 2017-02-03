@@ -16,25 +16,28 @@ public class ModuleAnalyzer {
             case Rule.DOUBLE_KNOCKOUT:
                 return doubleKnockOutAnalyze(module);
             case Rule.SINGLE_ROUND_ROBIN:
-                return new SingleRoundRobinAnalyzer().analyze(module);
+                return singleRoundRobinAnalyze(module);
             case Rule.DOUBLE_ROUND_ROBIN:
                 return doubleRoundRobinAnalyze(module);
         }
         return new int[0][][];
     }
 
-    public int[][][] singleKnockOutAnalyze(Module module) {
+    private int[][][] singleKnockOutAnalyze(Module module) {
         int[][][] result = new int[0][][];
         return result;
     }
 
-    public int[][][] doubleKnockOutAnalyze(Module module) {
+    private int[][][] doubleKnockOutAnalyze(Module module) {
         int[][][] result = new int[0][][];
         return result;
     }
 
-    public int[][][] doubleRoundRobinAnalyze(Module module) {
-        int[][][] result = new int[0][][];
-        return result;
+    private int[][][] singleRoundRobinAnalyze(Module module) {
+        return new SingleRoundRobinAnalyzer().analyze(module);
+    }
+
+    private int[][][] doubleRoundRobinAnalyze(Module module) {
+        return new DoubleRoundRobinAnalyzer().analyze(module);
     }
 }
