@@ -40,7 +40,7 @@ public class SingleRoundRobinAnalyzerTest {
     @Test
     public void testAnalyze() throws Exception {
 //TODO: Test goes here...
-        Competitor[] competitors = Data.RoundRobin.Single.competitors;
+        Competitor[][] competitors = Data.RoundRobin.Single.competitors;
         int[][] matchResult = Data.RoundRobin.Single.matchResults;
         int[][][] gameResult = Data.RoundRobin.Single.gameResults;
         int[][] result = Data.RoundRobin.Single.results;

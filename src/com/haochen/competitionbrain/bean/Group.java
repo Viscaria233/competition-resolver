@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Group extends Bean implements IFinish {
     protected List<Match> matches = new ArrayList<>();
+    protected List<Competitor> competitors = new ArrayList<>();
 
     public List<Match> getMatches() {
         return matches;
@@ -17,6 +18,14 @@ public class Group extends Bean implements IFinish {
 
     public void setMatches(List<Match> matches) {
         this.matches = matches;
+    }
+
+    public List<Competitor> getCompetitors() {
+        return competitors;
+    }
+
+    public void setCompetitors(List<Competitor> competitors) {
+        this.competitors = competitors;
     }
 
     @Override
