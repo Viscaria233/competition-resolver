@@ -1,7 +1,7 @@
 package test.com.haochen.competitionbrain.analyze;
 
-import com.haochen.competitionbrain.analyze.SingleRoundRobinAnalyzer;
 import com.haochen.competitionbrain.bean.*;
+import test.com.haochen.competitionbrain.Common;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Haochen on 2017/2/2.
  */
-public class Common {
+public class Util {
     static List<Module> createRoundRobinModuleList(Competitor[][] competitors, int[][] matchResults, int[][][] gameResults) {
         List<Module> modules = new ArrayList<>();
 
@@ -77,19 +77,10 @@ public class Common {
         return game;
     }
 
-    static Method findMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
-        for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
-            try {
-                return clazz.getDeclaredMethod(methodName, paramTypes);
-            } catch (NoSuchMethodException e) {}
-        }
-        return null;
-    }
-
     static int[][] invokeWithAllModules(String className, List<Module> modules, Competitor[][] competitors, int invokeCount) {
         try {
             Class clazz = Class.forName(className);
-            Method method= findMethod(clazz, "analyze", Module.class);
+            Method method= Common.findMethod(clazz, "analyze", Module.class);
             if (method == null) {
                 return null;
             }

@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Group extends Bean implements IFinish {
     protected List<Match> matches = new ArrayList<>();
+    protected int maxGame;
     protected List<Competitor> competitors = new ArrayList<>();
 
     public List<Match> getMatches() {
@@ -18,6 +19,14 @@ public class Group extends Bean implements IFinish {
 
     public void setMatches(List<Match> matches) {
         this.matches = matches;
+    }
+
+    public int getMaxGame() {
+        return maxGame;
+    }
+
+    public void setMaxGame(int maxGame) {
+        this.maxGame = maxGame;
     }
 
     public List<Competitor> getCompetitors() {
