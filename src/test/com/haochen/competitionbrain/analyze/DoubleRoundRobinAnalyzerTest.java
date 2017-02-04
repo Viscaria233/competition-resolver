@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
+import test.com.haochen.competitionbrain.Data;
 
 import java.util.List;
 
@@ -48,14 +49,14 @@ public class DoubleRoundRobinAnalyzerTest {
     @Test
     public void testAnalyze() throws Exception {
 //TODO: Test goes here...
-        Competitor[][] competitors = Data.RoundRobin.Double.competitors;
-        int[][] matchResult = Data.RoundRobin.Double.matchResults;
-        int[][][] gameResult = Data.RoundRobin.Double.gameResults;
-        int[][] result = Data.RoundRobin.Double.results;
+        Competitor[][] competitors = Data.Analyzer.RoundRobin.Double.competitors;
+        int[][] matchResult = Data.Analyzer.RoundRobin.Double.matchResults;
+        int[][][] gameResult = Data.Analyzer.RoundRobin.Double.gameResults;
+        int[][] result = Data.Analyzer.RoundRobin.Double.results;
 
-        List<Module> modules = Common.createRoundRobinModuleList(competitors, matchResult, gameResult);
+        List<Module> modules = Util.createRoundRobinModuleList(competitors, matchResult, gameResult);
 
-        int[][] ranks = Common.invokeWithAllModules(DoubleRoundRobinAnalyzer.class.getName(), modules, competitors, result.length);
+        int[][] ranks = Util.invokeWithAllModules(DoubleRoundRobinAnalyzer.class.getName(), modules, competitors, result.length);
         Assert.assertArrayEquals(ranks, result);
     }
 

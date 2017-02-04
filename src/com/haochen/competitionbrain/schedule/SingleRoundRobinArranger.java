@@ -26,11 +26,11 @@ public class SingleRoundRobinArranger {
             competitors[i] = competitorList.get(i);
         }
 
-        List<Match> matches = getMatches(competitors);
+        List<Match> matches = getMatches(competitors, group.getMaxGame());
         group.getMatches().addAll(matches);
     }
 
-    List<Match> getMatches(Competitor[] competitors) {
+    List<Match> getMatches(Competitor[] competitors, int maxGame) {
         List<Match> matches = new ArrayList<>();
         for (int i = 0; i < competitors.length - 1; ++i) {
             for (int head = 0, rear = competitors.length - 1; head < rear; ++head, --rear) {
@@ -40,8 +40,7 @@ public class SingleRoundRobinArranger {
                     continue;
                 }
 
-                //要改成动态获取maxGame
-                Match match = new Match(5);
+                Match match = new Match(maxGame);
                 match.getCompetitors()[0] = cHead;
                 match.getCompetitors()[1] = cRear;
                 matches.add(match);
