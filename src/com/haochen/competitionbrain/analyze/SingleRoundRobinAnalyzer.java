@@ -10,6 +10,8 @@ import java.util.*;
 public class SingleRoundRobinAnalyzer {
     Columns columns = new Columns();
 
+    public SingleRoundRobinAnalyzer() {}
+
     private ScoreGetter[] getScoreGetter() {
         final ScoreGetter SCORE = (r, i) -> r[0][i][columns.score];
         final ScoreGetter GAME_RATE = (r, i) -> r[0][i][columns.loseGame] == 0 ? Integer.MAX_VALUE

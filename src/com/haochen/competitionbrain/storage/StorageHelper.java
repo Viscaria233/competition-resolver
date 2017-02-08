@@ -7,6 +7,7 @@ import com.haochen.competitionbrain.bean.*;
  */
 public interface StorageHelper {
     Bean get(int id);
+    Bean get(Class<? extends Bean> type, int id);
     Athlete getAthlete(int id);
     Team getTeam(int id);
     Competition getCompetition(int id);
@@ -16,12 +17,15 @@ public interface StorageHelper {
     void saveTeam(Team team);
     void saveCompetition(Competition competition);
 
-    void remove(Bean bean);
-    void removeAthlete(Athlete athlete);
-    void removeTeam(Team team);
-    void removeCompetition(Competition competition);
+    void remove(int id);
+    void remove(Class<? extends Bean> type, int id);
+    void removeAthlete(int id);
+    void removeTeam(int id);
+    void removeCompetition(int id);
 
     Bean[] search(SearchTerm term);
-    void commit(Match match);
+    void commitResult(Match match);
     boolean exists(Bean bean);
+
+    void commit();
 }

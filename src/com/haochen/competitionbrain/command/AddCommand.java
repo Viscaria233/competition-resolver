@@ -1,6 +1,7 @@
 package com.haochen.competitionbrain.command;
 
 import com.haochen.competitionbrain.bean.Bean;
+import com.haochen.competitionbrain.impl.storage.test.TestStorageHelper;
 import com.haochen.competitionbrain.storage.StorageHelper;
 
 /**
@@ -21,7 +22,7 @@ public class AddCommand extends Command {
 
     @Override
     public Result execute() {
-        StorageHelper helper = null;
+        StorageHelper helper = TestStorageHelper.getInstance();
         if (!helper.exists(bean)) {
             helper.save(bean);
             return new Result().setSuccess(true);

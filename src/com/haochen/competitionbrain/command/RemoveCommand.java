@@ -1,6 +1,7 @@
 package com.haochen.competitionbrain.command;
 
 import com.haochen.competitionbrain.bean.Bean;
+import com.haochen.competitionbrain.impl.storage.test.TestStorageHelper;
 import com.haochen.competitionbrain.storage.StorageHelper;
 
 /**
@@ -21,9 +22,9 @@ public class RemoveCommand extends Command {
 
     @Override
     public Result execute() {
-        StorageHelper helper = null;
+        StorageHelper helper = TestStorageHelper.getInstance();
         if (helper.exists(bean)) {
-            helper.remove(bean);
+            helper.remove(bean.getId());
             return new Result().setSuccess(true);
         } else {
             return new Result().setSuccess(false).setErrorMessage("Target not found");

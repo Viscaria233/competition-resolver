@@ -9,6 +9,11 @@ import java.util.List;
  * Created by Haochen on 2016/12/29.
  */
 public class Module extends Bean implements IFinish {
+    public static final int SINGLE_KNOCKOUT = 1;
+    public static final int DOUBLE_KNOCKOUT = 1 << 1;
+    public static final int SINGLE_ROUND_ROBIN = 1 << 2;
+    public static final int DOUBLE_ROUND_ROBIN = 1 << 3;
+
     protected int rule;
     protected List<Group> groups = new ArrayList<>();
     protected List<Competitor> competitors = new ArrayList<>();

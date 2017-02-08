@@ -10,6 +10,8 @@ import java.util.List;
  * Created by Haochen on 2017/2/3.
  */
 public class DoubleRoundRobinArranger extends SingleRoundRobinArranger {
+    public DoubleRoundRobinArranger() {}
+
     @Override
     List<Match> getMatches(Competitor[] competitors, int maxGame) {
         List<Match> matches1 = super.getMatches(competitors, maxGame);

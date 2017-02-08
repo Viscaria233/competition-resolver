@@ -161,7 +161,7 @@ public abstract class DbContext {
             if (index >= values.length) {
                 return null;
             }
-            sql = sql.replaceFirst("(?)", values[index].toString());
+            sql = sql.replaceFirst("(?)", values[index] != null ? values[index].toString() : "null");
             index++;
         }
         return sql;
