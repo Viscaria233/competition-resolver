@@ -1,6 +1,7 @@
 package com.haochen.competitionbrain.command;
 
 import com.haochen.competitionbrain.bean.Match;
+import com.haochen.competitionbrain.impl.storage.test.TestStorageHelper;
 import com.haochen.competitionbrain.storage.StorageHelper;
 
 /**
@@ -21,9 +22,9 @@ public class CommitCommand extends Command {
 
     @Override
     public Result execute() {
-        StorageHelper helper = null;
+        StorageHelper helper = TestStorageHelper.getInstance();
         if (helper.exists(match)) {
-            helper.commit(match);
+            helper.commitResult(match);
             return new Result().setSuccess(true);
         } else {
             return new Result().setSuccess(false).setErrorMessage("Match not found");

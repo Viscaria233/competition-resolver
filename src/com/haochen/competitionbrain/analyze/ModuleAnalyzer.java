@@ -1,9 +1,6 @@
 package com.haochen.competitionbrain.analyze;
 
 import com.haochen.competitionbrain.bean.*;
-import com.haochen.competitionbrain.rule.Rule;
-
-import java.util.*;
 
 /**
  * Created by Haochen on 2017/1/17.
@@ -11,13 +8,13 @@ import java.util.*;
 public class ModuleAnalyzer {
     public int[][][] analyze(Module module) {
         switch (module.getRule()) {
-            case Rule.SINGLE_KNOCKOUT:
+            case Module.SINGLE_KNOCKOUT:
                 return singleKnockOutAnalyze(module);
-            case Rule.DOUBLE_KNOCKOUT:
+            case Module.DOUBLE_KNOCKOUT:
                 return doubleKnockOutAnalyze(module);
-            case Rule.SINGLE_ROUND_ROBIN:
+            case Module.SINGLE_ROUND_ROBIN:
                 return singleRoundRobinAnalyze(module);
-            case Rule.DOUBLE_ROUND_ROBIN:
+            case Module.DOUBLE_ROUND_ROBIN:
                 return doubleRoundRobinAnalyze(module);
         }
         return new int[0][][];

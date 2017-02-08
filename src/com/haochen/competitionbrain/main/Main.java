@@ -2,10 +2,18 @@ package com.haochen.competitionbrain.main;
 
 import com.haochen.competitionbrain.command.Command;
 import com.haochen.competitionbrain.command.CommandHandler;
+import com.haochen.competitionbrain.impl.storage.sqlite.SqliteContext;
+import com.haochen.competitionbrain.impl.storage.test.TestStorageHelper;
 import com.haochen.competitionbrain.network.NetworkMonitor;
 import com.haochen.competitionbrain.impl.network.socket.SocketMonitor;
+import com.haochen.competitionbrain.storage.DbContext;
+import com.haochen.competitionbrain.storage.StorageHelper;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -13,6 +21,8 @@ import java.util.Scanner;
  */
 public class Main {
     public static void main(String[] args) {
+        StorageHelper storageHelper = TestStorageHelper.getInstance();
+
         CommandHandler handler = CommandHandler.getInstance();
         handler.start();
 
@@ -21,6 +31,7 @@ public class Main {
         monitorThread.start();
 
         commandLine(monitor);
+        storageHelper.commit();
     }
 
     private static void commandLine(NetworkMonitor monitor) {
@@ -77,6 +88,27 @@ public class Main {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else if (ins.startsWith("insert ")) {
+                DbContext context = SqliteContext.getInstance();
+                int count = context.executeUpdate(ins);
+                System.out.println(count + " row(s) changed.");
+            } else if (ins.startsWith("select ")) {
+                DbContext context = SqliteContext.getInstance();
+                ResultSet resultSet = context.executeQuery(ins);
+                try {
+                    while (resultSet.next()) {
+                        for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); ++i) {
+                            System.out.print(resultSet.getString(i) + ", ");
+                        }
+                        System.out.println();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else if (ins.startsWith("delete ")) {
+                DbContext context = SqliteContext.getInstance();
+                int count = context.executeUpdate(ins);
+                System.out.println(count + " row(s) changed.");
             }
         } while (!ins.equals("exit"));
     }

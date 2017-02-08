@@ -8,6 +8,8 @@ import java.util.Map;
  * Created by Haochen on 2017/2/1.
  */
 public class DoubleRoundRobinAnalyzer extends SingleRoundRobinAnalyzer {
+    public DoubleRoundRobinAnalyzer() {}
+
     @Override
     protected int[][][] getResultArray(int row, int col) {
         return new int[4][row][col];

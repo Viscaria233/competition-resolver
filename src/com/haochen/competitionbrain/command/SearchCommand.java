@@ -1,6 +1,7 @@
 package com.haochen.competitionbrain.command;
 
 import com.haochen.competitionbrain.bean.Bean;
+import com.haochen.competitionbrain.impl.storage.test.TestStorageHelper;
 import com.haochen.competitionbrain.storage.SearchTerm;
 import com.haochen.competitionbrain.storage.StorageHelper;
 
@@ -22,7 +23,7 @@ public class SearchCommand extends Command {
 
     @Override
     public Result execute() {
-        StorageHelper helper = null;
+        StorageHelper helper = TestStorageHelper.getInstance();
         Bean[] beans = helper.search(term);
         if (beans != null && beans.length > 0) {
             return new Result().setSuccess(true).setResultObject(beans);

@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public abstract class Bean implements Serializable {
     protected int id;
+    protected String name;
 
     public Bean() {}
 
@@ -14,8 +15,25 @@ public abstract class Bean implements Serializable {
         this.id = id;
     }
 
+    public Bean(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -25,11 +43,14 @@ public abstract class Bean implements Serializable {
 
         Bean bean = (Bean) o;
 
-        return id == bean.id;
+        if (id != bean.id) return false;
+        return name != null ? name.equals(bean.name) : bean.name == null;
     }
 
     @Override
     public int hashCode() {
-        return id;
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }

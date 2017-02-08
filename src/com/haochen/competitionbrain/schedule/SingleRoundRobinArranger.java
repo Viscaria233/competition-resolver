@@ -9,6 +9,8 @@ import java.util.List;
  * Created by Haochen on 2017/2/3.
  */
 public class SingleRoundRobinArranger {
+    public SingleRoundRobinArranger() {}
+
     void arrange(Module module) {
         for (Group group : module.getGroups()) {
             arrange(group);
