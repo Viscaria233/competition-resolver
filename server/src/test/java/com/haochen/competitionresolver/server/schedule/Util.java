@@ -1,4 +1,4 @@
-package test.com.haochen.competitionresolver.server.schedule;
+package com.haochen.competitionresolver.server.schedule;
 
 import com.haochen.competitionresolver.server.bean.Competitor;
 import com.haochen.competitionresolver.server.bean.Group;

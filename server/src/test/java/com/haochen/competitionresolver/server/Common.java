@@ -1,4 +1,4 @@
-package test.com.haochen.competitionresolver.server;
+package com.haochen.competitionresolver.server;
 
 import java.lang.reflect.Method;
 
@@ -10,9 +10,7 @@ public class Common {
             throws NoSuchMethodException {
         for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
             try {
-                Method method = clazz.getDeclaredMethod(methodName, paramTypes);
-                method.setAccessible(true);
-                return method;
+                return clazz.getDeclaredMethod(methodName, paramTypes);
             } catch (NoSuchMethodException e) {}
         }
         throw new NoSuchMethodException(methodName);

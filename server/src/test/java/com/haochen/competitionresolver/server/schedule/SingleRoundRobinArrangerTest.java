@@ -1,17 +1,16 @@
-package test.com.haochen.competitionresolver.server.schedule;
+package com.haochen.competitionresolver.server.schedule;
 
 import com.haochen.competitionresolver.server.bean.Competitor;
 import com.haochen.competitionresolver.server.bean.Group;
 import com.haochen.competitionresolver.server.bean.Match;
 import com.haochen.competitionresolver.server.bean.Module;
-import com.haochen.competitionresolver.server.schedule.SingleRoundRobinArranger;
 import javafx.util.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
-import test.com.haochen.competitionresolver.server.Common;
-import test.com.haochen.competitionresolver.server.Data;
+import com.haochen.competitionresolver.server.Common;
+import com.haochen.competitionresolver.server.Data;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -44,11 +43,8 @@ public class SingleRoundRobinArrangerTest {
         List<Module> modules = Util.createModuleList(competitors);
 
         Class<?> clazz = SingleRoundRobinArranger.class;
-        Constructor<?> constructor = clazz.getDeclaredConstructor();
-        constructor.setAccessible(true);
         Method method = Common.findMethod(clazz, "arrange", Module.class);
-        method.setAccessible(true);
-        Util.invokeWithAllModules(method, constructor.newInstance(), modules);
+        Util.invokeWithAllModules(method, clazz.newInstance(), modules);
         Assert.assertTrue(isFull(modules));
     }
 

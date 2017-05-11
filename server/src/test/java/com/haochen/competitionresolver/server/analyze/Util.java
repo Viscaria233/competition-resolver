@@ -1,7 +1,7 @@
-package test.com.haochen.competitionresolver.server.analyze;
+package com.haochen.competitionresolver.server.analyze;
 
 import com.haochen.competitionresolver.server.bean.*;
-import test.com.haochen.competitionresolver.server.Common;
+import com.haochen.competitionresolver.server.Common;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

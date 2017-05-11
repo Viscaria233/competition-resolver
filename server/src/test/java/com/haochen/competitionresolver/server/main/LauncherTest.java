@@ -1,9 +1,7 @@
-package test.com.haochen.competitionresolver.server.main;
+package com.haochen.competitionresolver.server.main;
 
 import com.haochen.competitionresolver.server.command.CommandHandler;
 import com.haochen.competitionresolver.server.impl.network.socket.SocketMonitor;
-import com.haochen.competitionresolver.server.main.CommandLine;
-import com.haochen.competitionresolver.server.main.Launcher;
 import com.haochen.competitionresolver.server.network.NetworkMonitor;
 import org.junit.Assert;
 import org.junit.Test;
