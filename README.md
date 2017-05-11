@@ -1,1 +1,1 @@
-# competitionbrain
+# competition-resolver
