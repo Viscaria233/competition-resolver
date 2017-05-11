@@ -1,4 +1,4 @@
-package test.com.haochen.competitionresolver.server;
+package com.haochen.competitionresolver.server;
 
 import com.haochen.competitionresolver.server.bean.Athlete;
 import com.haochen.competitionresolver.server.bean.Competitor;

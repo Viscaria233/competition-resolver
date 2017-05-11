@@ -1,13 +1,12 @@
-package test.com.haochen.competitionresolver.server.analyze;
+package com.haochen.competitionresolver.server.analyze;
 
-import com.haochen.competitionresolver.server.analyze.DoubleRoundRobinAnalyzer;
 import com.haochen.competitionresolver.server.bean.Competitor;
 import com.haochen.competitionresolver.server.bean.Module;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
-import test.com.haochen.competitionresolver.server.Data;
+import com.haochen.competitionresolver.server.Data;
 
 import java.util.List;
 
